@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Important Survey — Please Complete</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f3ee;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --muted: #888;
+    --border: #e0dcd4;
+    --accent: #2d6a4f;
+    --accent-light: #e8f5ee;
+    --red: #c0392b;
+    --yellow-light: #fef9ec;
+    --radius: 12px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .wrap { width: 100%; max-width: 540px; }
+
+  /* org header */
+  .org-header { text-align: center; margin-bottom: 24px; }
+  .org-logo {
+    width: 50px; height: 50px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 22px;
+  }
+  .org-name {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px; line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .card-sub { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 28px; }
+
+  /* fields */
+  .field { margin-bottom: 18px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .field input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .field input:focus { border-color: var(--accent); background: #fff; }
+
+  /* button */
+  .btn {
+    width: 100%; padding: 13px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-top: 4px;
+  }
+  .btn:hover { opacity: 0.88; }
+  .btn:active { transform: scale(0.99); }
+
+  .error-msg { font-size: 13px; color: var(--red); margin-top: 12px; min-height: 18px; font-weight: 500; }
+
+  /* quiz */
+  .quiz-section { display: none; }
+  .progress-wrap { margin-bottom: 24px; }
+  .progress-meta {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 8px; font-weight: 600;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .progress-track { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.5s ease; }
+
+  .q-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(17px, 3vw, 21px);
+    line-height: 1.55; margin-bottom: 6px;
+    min-height: 60px; transition: opacity 0.25s;
+  }
+  .q-note {
+    display: block; font-family: 'DM Sans', sans-serif;
+    font-size: 12px; color: var(--muted);
+    font-style: italic; margin-bottom: 20px; line-height: 1.5;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 12px 16px; background: #fff;
+    font-size: 14px; font-family: 'DM Sans', sans-serif;
+    color: var(--text); text-align: left; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .opt:hover { border-color: var(--accent); background: var(--accent-light); }
+  .opt-letter {
+    width: 26px; height: 26px; border: 1.5px solid var(--border);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+    color: var(--muted); transition: all 0.15s;
+  }
+  .opt:hover .opt-letter { border-color: var(--accent); color: var(--accent); }
+  .opt.selected { border-color: var(--accent); background: var(--accent-light); pointer-events: none; }
+  .opt.selected .opt-letter { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .opt.dimmed { opacity: 0.28; pointer-events: none; }
+
+  .twist-box {
+    margin-top: 14px;
+    background: var(--yellow-light);
+    border: 1.5px solid #f0c040;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px; font-weight: 600; color: #7d5a00;
+    animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  @keyframes popIn { from { transform:scale(0.9); opacity:0; } to { transform:scale(1); opacity:1; } }
+
+  /* result */
+  .result-section { display: none; }
+  .result-icon { font-size: 68px; margin-bottom: 12px; animation: pop 0.6s cubic-bezier(0.34,1.56,0.64,1); text-align:center; }
+  @keyframes pop { from { transform:scale(0); } to { transform:scale(1); } }
+  .result-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(22px,5vw,30px); margin-bottom: 10px; text-align:center;
+  }
+  .result-sub { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 22px; text-align:center; }
+
+  .fool-banner {
+    background: var(--accent); color: #fff;
+    border-radius: var(--radius); padding: 20px 24px;
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(18px,5vw,26px);
+    text-align: center; margin-bottom: 20px;
+    animation: pop 0.5s 0.15s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .fool-banner .sub-note {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; opacity: 0.88; margin-top: 6px;
+    font-weight: 500; display: block;
+  }
+
+  .findings { border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 20px; }
+  .findings-head {
+    background: var(--bg); padding: 10px 16px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); border-bottom: 1px solid var(--border);
+  }
+  .finding {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    font-size: 14px; line-height: 1.5; display: flex; gap: 12px;
+  }
+  .finding:last-child { border-bottom: none; }
+  .finding .lbl {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--muted); min-width: 90px; padding-top: 1px;
+  }
+
+  .replay-btn {
+    display: block; width: 100%; padding: 12px;
+    background: transparent; border: 1.5px solid var(--border);
+    border-radius: 8px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 600; color: var(--muted);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .replay-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* loader */
+  .loading-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(245,243,238,0.96);
+    z-index: 100; flex-direction: column;
+    align-items: center; justify-content: center; gap: 14px;
+  }
+  .loading-overlay.active { display: flex; }
+  .spinner {
+    width: 34px; height: 34px;
+    border: 3px solid var(--border); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-msg { font-size: 14px; color: var(--muted); font-weight: 500; }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .animate-in { animation: fadeUp 0.4s ease forwards; }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-msg" id="loadingMsg">Verifying identity...</div>
+</div>
+
+<div class="wrap">
+
+  <!-- LOGIN -->
+  <div id="loginSection">
+    <div class="org-header">
+      <div class="org-logo">📋</div>
+      <div class="org-name">Lifestyle Survey - Master Thesis — 2026</div>
+    </div>
+    <div class="card animate-in">
+      <div class="card-title">You've been selected.</div>
+      <div class="card-sub">This is a short mandatory survey distributed to a limited group of individuals. Please verify your identity to begin. Your responses are fully confidential and used only for research purposes.</div>
+      <div class="field">
+        <label>First Name</label>
+        <input type="text" id="nameInput" placeholder="Enter your first name" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label>Date of Birth <span style="color:var(--muted);font-weight:400">(DD.MM format)</span></label>
+        <input type="text" id="dobInput" placeholder="e.g. 15.06" autocomplete="off" />
+      </div>
+      <button class="btn" onclick="verifyAccess()">Begin Survey →</button>
+      <div class="error-msg" id="errorMsg"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section" id="quizSection">
+    <div class="org-header">
+      <div class="org-logo">📋</div>
+      <div class="org-name">Lifestyle Survey - Master Thesis — 2026</div>
+    </div>
+    <div class="card animate-in">
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="qLabel">Question 1 of 8</span>
+          <span id="qPct">0%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="optionsWrap"></div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-section" id="resultSection">
+    <div class="org-header">
+      <div class="org-logo">🎉</div>
+      <div class="org-name">Survey Results — Deepika</div>
+    </div>
+    <div class="card animate-in">
+      <div class="result-icon">🎭</div>
+      <div class="result-title">Results Are Out.</div>
+      <div class="result-sub">Our panel of researchers have reviewed your answers and produced the following official findings.</div>
+      <div class="fool-banner">
+        🎉 APRIL FOOL'S, DEEPIKA! 🎉
+        <span class="sub-note">No, there is no National Lifestyle Survey. Thank You for Participating 💚</span>
+      </div>
+      <div class="findings" id="findings"></div>
+      <button class="replay-btn" onclick="restart()">↺ Play again</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// VERIFY
+function verifyAccess() {
+  const name = document.getElementById('nameInput').value.trim().toLowerCase();
+  const dob  = document.getElementById('dobInput').value.trim();
+  const err  = document.getElementById('errorMsg');
+  if (!name || !dob) { err.textContent = 'Please fill in all fields to continue.'; return; }
+  if (name !== 'deepika') { err.textContent = 'Name not found in our records. Please check and try again.'; return; }
+  if (dob !== '12.11') { err.textContent = 'Date of birth does not match our records. Please try again.'; return; }
+  err.textContent = '';
+  const overlay = document.getElementById('loadingOverlay');
+  const msg = document.getElementById('loadingMsg');
+  overlay.classList.add('active');
+  const steps = ['Verifying identity...', 'Checking eligibility...', 'Loading your survey...', 'Almost ready...'];
+  let i = 0;
+  const t = setInterval(() => {
+    msg.textContent = steps[i++] || steps[steps.length-1];
+    if (i > steps.length) {
+      clearInterval(t);
+      setTimeout(() => {
+        overlay.classList.remove('active');
+        document.getElementById('loginSection').style.display = 'none';
+        startQuiz();
+      }, 400);
+    }
+  }, 550);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Enter') verifyAccess(); });
+
+// QUESTIONS — look like a real survey, twist after each answer
+const questions = [
+  {
+    q: "What will happen to RCB this season ?",
+    opts: ["We already have a better looking owner, so who needs a title anyway?", "We will lose to MI in the final (Hope so)", "Our main sponsor is 'NOTHING', so naturally we will do... nothing.", "Tukka ek baar lagta hai, 2025 was tukka year for every sports team"],
+    twist: "Emotional risk: extreme. Loyalty: thala-level"
+  },
+  {
+    q: "What’s your ultimate comfort food",
+    opts: ["Paneer EVERYTHING, because cheese is life", "Anything edible that doesn’t betray my veggie morals", "Anything home cooked that gives karma points", "Whatever keeps me morally superior to meat-eaters"],
+    twist: "Vegetarians: 1 | Meat lovers: 0."
+  },
+  {
+    q: "Your vibe for a chill evening:",
+    opts: ["Vodka because water is boring", "Actually just sit and overthink everything", "Smoke, then dramatically stare at the ceiling", "Watch random reels and then feel like I wasted the evening"],
+    twist: "Whatever u choose, remember (In Heaven there is no beer, that's why we drink it here.)"
+  }
+
+
+];
+
+let currentQ = 0;
+
+function startQuiz() {
+  document.getElementById('quizSection').style.display = 'block';
+  loadQ(0);
+}
+
+function loadQ(idx) {
+  const q = questions[idx];
+  const pct = Math.round((idx / questions.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('qLabel').textContent = `Question ${idx + 1} of ${questions.length}`;
+  document.getElementById('qPct').textContent = pct + '%';
+
+  const qEl = document.getElementById('qText');
+  qEl.style.opacity = 0;
+  setTimeout(() => {
+    qEl.innerHTML = q.q + (q.note ? `<span class="q-note">${q.note}</span>` : '');
+    qEl.style.opacity = 1;
+  }, 200);
+
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.style.opacity = 0;
+    btn.innerHTML = `<span class="opt-letter">${String.fromCharCode(65+i)}</span>${opt}`;
+    btn.onclick = () => pick(btn);
+    wrap.appendChild(btn);
+    setTimeout(() => { btn.style.transition = 'opacity 0.3s, border-color 0.15s, background 0.15s'; btn.style.opacity = 1; }, 80 + i * 75);
+  });
+}
+
+function pick(btn) {
+  document.querySelectorAll('.opt').forEach(b => {
+    b.onclick = null;
+    if (b === btn) b.classList.add('selected'); else b.classList.add('dimmed');
+  });
+  const twist = document.createElement('div');
+  twist.className = 'twist-box';
+  twist.textContent = questions[currentQ].twist;
+  document.getElementById('optionsWrap').appendChild(twist);
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ >= questions.length) showResult();
+    else loadQ(currentQ);
+  }, 1700);
+}
+
+function showResult() {
+  document.getElementById('quizSection').style.display = 'none';
+  document.getElementById('resultSection').style.display = 'block';
+  document.getElementById('findings').innerHTML = `
+    <div class="findings-head">Official Findings — File: Deepika, 2026</div>
+    <div class="finding"><span class="lbl">RCB Loyalty</span>Clinically diagnosed. No known cure.</div>
+    <div class="finding"><span class="lbl">Food Philosophy</span>Vegetarian. Proud of it. Will mention it. Paneer is a personality trait.</div>
+    <div class="finding"><span class="lbl">Chill Evenings</span>Starts as "relaxing" chance of existential crisis.</div>
+    <div class="finding"><span class="lbl">Overall Verdict</span> Loyal, Full of good karma, and completely irreplaceable. </div>
+  `;
+  launchConfetti();
+}
+
+function restart() {
+  currentQ = 0;
+  document.getElementById('resultSection').style.display = 'none';
+  document.getElementById('loginSection').style.display = 'block';
+  document.getElementById('nameInput').value = '';
+  document.getElementById('dobInput').value = '';
+  document.getElementById('errorMsg').textContent = '';
+}
+
+function launchConfetti() {
+  const colors = ['#2d6a4f','#f39c12','#e74c3c','#3498db','#9b59b6'];
+  const s = document.createElement('style');
+  s.textContent = `@keyframes cffall{to{transform:translateY(110vh) rotate(600deg);opacity:0}}`;
+  document.head.appendChild(s);
+  for (let i = 0; i < 70; i++) {
+    const d = document.createElement('div');
+    const sz = 6 + Math.random() * 8;
+    d.style.cssText = `position:fixed;width:${sz}px;height:${sz}px;background:${colors[Math.floor(Math.random()*colors.length)]};top:-10px;left:${Math.random()*100}vw;z-index:9999;border-radius:${Math.random()>.5?'50%':'2px'};animation:cffall ${1.8+Math.random()*1.4}s ease-in ${Math.random()*0.7}s forwards;pointer-events:none;`;
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 4000);
+  }
+}
+</script>
+</body>
+</html>
